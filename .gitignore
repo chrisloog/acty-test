@@ -1,0 +1,16 @@
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.idea/
+*.iml
+/vendor/
+/composer.lock
+.phpunit.result.cache
+*.log
+*.cache
+*.tmp
+debug.log
+.env
+.env.*
