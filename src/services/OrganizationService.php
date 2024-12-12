@@ -1,8 +1,8 @@
 <?php
 namespace src\services;
 
-use App\Repositories\OrganizationRepository;
-use App\Repositories\RelationshipRepository;
+use src\repositories\OrganizationRepository;
+use src\repositories\RelationshipRepository;
 
 class OrganizationService {
     private $organizationRepository;

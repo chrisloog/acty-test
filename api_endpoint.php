@@ -5,9 +5,9 @@ require_once __DIR__ . '/src/Repositories/OrganizationRepository.php';
 require_once __DIR__ . '/src/Repositories/RelationshipRepository.php';
 require_once __DIR__ . '/src/Services/OrganizationService.php';
 
-use App\Repositories\OrganizationRepository;
-use App\Repositories\RelationshipRepository;
-use App\Services\OrganizationService;
+use src\repositories\OrganizationRepository;
+use src\repositories\RelationshipRepository;
+use src\services\OrganizationService;
 
 if (!isset($conn)) {
     die("Database connection not established. Please check db.php.");
