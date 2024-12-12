@@ -1,19 +1,11 @@
 ## Acty RESTful API
 
-### Nõuded:
-
-PHP 7.4+ (töötab ka XAMPP-iga, mis sisaldab Apache ja MySQL)
-
-MySQL andmebaas
-
-Postman või mõni muu HTTP-päringute tegemise tööriist (nt cURL, Insomnia)
-
 ### Paigaldamine ja käivitamine:
 
 Lae alla XAMPP:
 https://www.apachefriends.org/download.html
 
-Järgi allalaadimise ajal esitatavaid juhiseid.
+Järgi allalaadimise juhiseid.
 
 ### Projekti kloonimine htdocs kausta:
 
@@ -28,27 +20,31 @@ Windows: klooni või kopeeri projekti kaust asukohta C:\xampp\htdocs
   git clone https://github.com/sinu-kasutajanimi/acty-restful-api.git
 ```
 
-Käivita XAMPP-is Apache ja MySQL serverid.
+Käivita Apache ja MySQL serverid XAMPP rakenduses.
 
 ### Andmebaasi seadistamine: 
 
 Ava veebibrauseris http://localhost/phpmyadmin/
 
-Loo uus andmebaas, näiteks nimega acty-test.
+Loo uus andmebaas.
 
 Loo tabelid:
 
+```sql
 CREATE TABLE organizations (
     id INT AUTO_INCREMENT PRIMARY KEY, 
     org_name VARCHAR(255) 
-    NOT NULL UNIQUE );
+    NOT NULL UNIQUE 
+);
 
 CREATE TABLE organization_relationships ( 
     id INT AUTO_INCREMENT PRIMARY KEY, 
     parent_id INT NOT NULL, child_id INT NOT NULL, 
     FOREIGN KEY (parent_id) REFERENCES organizations(id) 
     ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY (child_id) 
-    REFERENCES organizations(id) ON DELETE CASCADE ON UPDATE CASCADE );
+    REFERENCES organizations(id) ON DELETE CASCADE ON UPDATE CASCADE 
+);
+```
 
 ### API päringute tegemine: 
 
@@ -60,16 +56,297 @@ URL: http://localhost/acty-restful-api/api_endpoint.php
 
 Body (JSON), näiteks:
 
-{ "org_name": "Paradise Island", "daughters": [ { "org_name": "Banana tree", "daughters": [ { "org_name": "Yellow Banana" }, { "org_name": "Brown Banana" }, { "org_name": "Black Banana" } ] } ] }
+```json
+{
+  "org_name": "A",
+  "daughters": [
+    {
+      "org_name": "B",
+      "daughters": [
+        { "org_name": "C" },
+        { "org_name": "D" }
+      ]
+    }
+  ]
+}
+```
 
 See lisab andmebaasi vastavad organisatsioonid ja nende omavahelised  suhted.
 
 ### GET-päring (andmete küsimiseks):
 
-URL: http://localhost/acty-restful-api/api_endpoint.php?org_name=Black Banana
+URL: http://localhost/acty-restful-api/api_endpoint.php?org_name=C
 
 See tagastab "Black Banana" organisatsiooni vahetud vanem-, õde- ja tütarorganisatsioonid.
 
 ### Testimine
 
 Rakendus on testitud läbi Postman'i
+
+Etteantud näide:
+
+```json
+{
+  "org_name": "Paradise Island",
+  "daughters": [
+    {
+      "org_name": "Banana tree",
+      "daughters": [
+        { "org_name": "Yellow Banana" },
+        { "org_name": "Brown Banana" },
+        { "org_name": "Black Banana" }
+      ]
+    },
+    {
+      "org_name": "Big banana tree",
+      "daughters": [
+        { "org_name": "Yellow Banana" },
+        { "org_name": "Brown Banana" },
+        { "org_name": "Green Banana" },
+        {
+          "org_name": "Black Banana",
+          "daughters": [
+            { "org_name": "Phoneutria Spider" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+POST päring tagastab:
+
+```json
+{
+    "message": "Data inserted successfully"
+}
+```
+
+GET päring aadressile http://localhost/acty-restful-api/api_endpoint.php?org_name=Black Banana tagastab:
+
+```json
+[
+    {
+        "relationship_type": "parent",
+        "org_name": "Banana tree"
+    },
+    {
+        "relationship_type": "parent",
+        "org_name": "Big banana tree"
+    },
+    {
+        "relationship_type": "sister",
+        "org_name": "Yellow Banana"
+    },
+    {
+        "relationship_type": "sister",
+        "org_name": "Brown Banana"
+    },
+    {
+        "relationship_type": "sister",
+        "org_name": "Green Banana"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Phoneutria Spider"
+    }
+]
+```
+
+Olukord kus organisatsioon lisatakse uuesti eraldi POST päringus, aga näiteks uue vanema, õe või tütrega.
+
+POST päring:
+
+```json
+{
+  "org_name": "Tesla",
+  "daughters": [
+    {
+      "org_name": "Apple",
+      "daughters": [
+        { "org_name": "Broadcom" },
+        { "org_name": "Comcast" }
+      ]
+    }
+  ]
+}
+```
+
+GET päring aadressile http://localhost/acty-restful-api/api_endpoint.php?org_name=Apple tagastab:
+
+```json
+[
+    {
+        "relationship_type": "parent",
+        "org_name": "Tesla"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Broadcom"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Comcast"
+    }
+]
+```
+
+Eraldi päringus lisasin organisatsioonile Apple ühe õe, vanema ja kaks tütart. 
+
+POST päring:
+```json
+{
+  "org_name": "Ford",
+  "daughters": [
+    {
+      "org_name": "Apple",
+      "daughters": [
+        { "org_name": "Samsung" },
+        { "org_name": "Huawei" }
+      ]
+    },
+    {
+      "org_name": "Walmart",
+      "daughters": [
+        { "org_name": "Fedex" }
+      ]
+    }
+  ]
+}
+```
+
+Nüüd tagastab GET päring samale aadressile:
+
+```json
+[
+    {
+        "relationship_type": "parent",
+        "org_name": "Tesla"
+    },
+    {
+        "relationship_type": "parent",
+        "org_name": "Ford"
+    },
+    {
+        "relationship_type": "sister",
+        "org_name": "Walmart"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Broadcom"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Comcast"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Samsung"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Huawei"
+    }
+]
+```
+
+Olukord, kus lisatakse eraldi ainult üks tütarorganisatsiooni.
+
+POST päring:
+
+```json
+{
+  "org_name": "Apple",
+  "daughters": [
+    {
+      "org_name": "Nokia"
+    }
+  ]
+}
+```
+
+Nüüd tagastab GET päring samale aadressile:
+
+```json
+[
+    {
+        "relationship_type": "parent",
+        "org_name": "Tesla"
+    },
+    {
+        "relationship_type": "parent",
+        "org_name": "Ford"
+    },
+    {
+        "relationship_type": "sister",
+        "org_name": "Walmart"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Broadcom"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Comcast"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Samsung"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Huawei"
+    },
+    {
+        "relationship_type": "daughter",
+        "org_name": "Nokia"
+    }
+]
+```
+
+Olukord, kus organisatsioon lisatakse ilma ühegi vanema, õe või tütreta.
+
+```json
+{
+  "org_name": "Toyota"
+}
+```
+
+GET päring aadressile http://localhost/acty-restful-api/api_endpoint.php?org_name=Toyota tagastab:
+
+```json
+[]
+```
+
+Olukord, kus organisatsiooni mida päringus küsitakse ei eksisteeri.
+
+GET päring aadressile http://localhost/acty-restful-api/api_endpoint.php?org_name=NonExistentOrg tagastab:
+
+```json
+{
+  "message": "Organization not found"
+}
+```
+
+Olukord, kus proovitakse lisada organisatsioonile tütreid, ilma nime täpsustamata.
+
+POST päring:
+
+```json
+{
+  "daughters": [
+    {
+      "org_name": "Nokia"
+    }
+  ]
+}
+```
+
+Vastus:
+
+```json
+{
+    "message": "Missing organization name"
+}
+```
