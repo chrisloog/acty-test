@@ -154,7 +154,7 @@ GET päring aadressile http://localhost/acty-restful-api/api_endpoint.php?org_na
 ]
 ```
 
-Olukord kus organisatsioon lisatakse uuesti eraldi POST päringus, aga näiteks uue vanema, õe või tütrega.
+#### Olukord kus organisatsioon lisatakse uuesti eraldi POST päringus, aga näiteks uue vanema, õe või tütrega.
 
 POST päring:
 
@@ -251,7 +251,7 @@ Nüüd tagastab GET päring samale aadressile:
 ]
 ```
 
-Olukord, kus lisatakse eraldi ainult üks tütarorganisatsiooni.
+#### Olukord, kus lisatakse eraldi ainult üks tütarorganisatsioon.
 
 POST päring:
 
@@ -305,7 +305,7 @@ Nüüd tagastab GET päring samale aadressile:
 ]
 ```
 
-Olukord, kus organisatsioon lisatakse ilma ühegi vanema, õe või tütreta.
+#### Olukord, kus organisatsioon lisatakse ilma ühegi vanema, õe või tütreta.
 
 ```json
 {
@@ -319,7 +319,7 @@ GET päring aadressile http://localhost/acty-restful-api/api_endpoint.php?org_na
 []
 ```
 
-Olukord, kus organisatsiooni mida päringus küsitakse ei eksisteeri.
+#### Olukord, kus organisatsiooni mida päringus küsitakse ei eksisteeri.
 
 GET päring aadressile http://localhost/acty-restful-api/api_endpoint.php?org_name=NonExistentOrg tagastab:
 
@@ -329,7 +329,7 @@ GET päring aadressile http://localhost/acty-restful-api/api_endpoint.php?org_na
 }
 ```
 
-Olukord, kus proovitakse lisada organisatsioonile tütreid, ilma nime täpsustamata.
+#### Olukord, kus proovitakse lisada organisatsioonile tütreid, ilma nime täpsustamata.
 
 POST päring:
 
