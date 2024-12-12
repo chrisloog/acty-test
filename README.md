@@ -77,7 +77,7 @@ See lisab andmebaasi vastavad organisatsioonid ja nende omavahelised  suhted.
 
 URL: http://localhost/acty-restful-api/api_endpoint.php?org_name=C
 
-See tagastab "Black Banana" organisatsiooni vahetud vanem-, õde- ja tütarorganisatsioonid.
+See tagastab "C" organisatsiooni vahetud vanem-, õde- ja tütarorganisatsioonid.
 
 ### Testimine
 
