@@ -35,8 +35,12 @@ switch ($method) {
         break;
 
     case 'GET':
-        if (isset($_GET['org_name'])) {
-            $organizationName = $_GET['org_name'];
+        $organizationName = $_GET['org_name'] ?? null;
+        $maxPerPage = 100;
+        $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+        $offset = ($currentPage - 1) * $maxPerPage;
+
+        if ($organizationName) {
             $organization = $organizationRepository->findByName($organizationName);
 
             if (!$organization) {
@@ -71,13 +75,18 @@ switch ($method) {
                 ];
             }
 
-            echo json_encode($relationships);
+            usort($relationships, fn($a, $b) => strcmp($a['org_name'], $b['org_name']));
+
+            $pagedRelationships = array_slice($relationships, $offset, $maxPerPage);
+
+            echo json_encode($pagedRelationships);
 
         } else {
             echo json_encode(["message" => "Missing organization name"]);
         }
 
         break;
+
 
     default:
         echo json_encode(["message" => "Invalid request method"]);
