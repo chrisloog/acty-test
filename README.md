@@ -79,9 +79,7 @@ URL: http://localhost/acty-restful-api/api_endpoint.php?org_name=C
 
 See tagastab "C" organisatsiooni vahetud vanem-, õde- ja tütarorganisatsioonid.
 
-Kui organisatsioonil on rohkem kui 100 erinevat suhet, siis saab järgmiseid suhteid vaadata näiteks järgneva GET päringuga - http://localhost/acty-restful-api/api_endpoint.php?page=2&org_name=C
-
-Kus tuleb muuta page parameetrid vastavalt vajadusele.
+Kui organisatsioonil on rohkem kui 100 erinevat suhet, siis saab järgmiseid suhteid vaadata näiteks järgneva GET päringuga - http://localhost/acty-restful-api/api_endpoint.php?page=2&org_name=C, kus tuleb muuta page parameetrit vastavalt vajadusele.
 
 ### Testimine
 
