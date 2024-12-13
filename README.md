@@ -26,7 +26,7 @@ Käivita Apache ja MySQL serverid XAMPP rakenduses.
 
 Ava veebibrauseris http://localhost/phpmyadmin/
 
-Loo uus andmebaas.
+Loo uus andmebaas. Näiteks nimega acty-test. Kui kasutate muud nime, siis tuleb failis db.php see ära muuta.
 
 Loo tabelid:
 
